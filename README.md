@@ -1,0 +1,2 @@
+# lfscript
+脚本
