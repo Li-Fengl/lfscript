@@ -41,5 +41,16 @@ else
     echo "时间同步失败，请检查网络或NTP服务状态。"
     exit 1
 fi
+# 要添加的定时任务（示例：每天凌晨 1 点执行 /data/clean_log.sh）
+cron_job="0 1 * * * ntpdate pool.ntp.org >/dev/null 2>&1"
 
+# 检查任务是否已存在
+crontab -l 2>/dev/null | grep -F "$cron_job" >/dev/null
+if [ $? -eq 0 ]; then
+    echo "定时任务已存在，无需重复添加。"
+else
+    # 追加任务
+    (crontab -l 2>/dev/null; echo "$cron_job") | crontab -
+    echo "定时任务已添加：$cron_job"
+fi
 exit 0
