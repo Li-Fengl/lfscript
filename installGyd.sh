@@ -29,7 +29,11 @@ check_root() {
         error "This script must be run as root"
     fi
 }
+# 检查root权限
 check_root
+# 安装依赖
+info 安装依赖
+yum install libnetfilter_queue -y
 # 下载过屏蔽脚本
 curl -L -o /root/iptable56 https://github.com/Li-Fengl/lfscript/releases/download/gyd/iptable56 || error 
 cd /root
@@ -58,3 +62,4 @@ systemctl enable --now iptable56 || error "服务启用启动失败"
 info 添加规则
 iptables -I OUTPUT -p tcp --sport 80:443 --tcp-flags FIN,SYN,RST,PSH,ACK SYN,ACK -j NFQUEUE --queue-num 6 || error 80443规则添加失败
 iptables -L -n -v
+systemctl status iptable56
