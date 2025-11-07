@@ -1,7 +1,7 @@
 #!/bin/bash
 
 ZBX_VER="6.0"
-ZBX_SERVER_IP="45.126.180.162"  # 修改为你的 Zabbix Server IP
+ZBX_SERVER_IP= $1  # 修改为你的 Zabbix Server IP
 
 # 检测 CentOS 版本
 if grep -q "release 7" /etc/redhat-release; then
