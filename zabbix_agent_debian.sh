@@ -1,7 +1,7 @@
 #!/bin/bash
 
 ZBX_VER="6.0"
-ZBX_SERVER_IP="45.126.180.162"  # 修改为你的 Zabbix Server IP
+ZBX_SERVER_IP=$1  # 修改为你的 Zabbix Server IP
 
 # 添加仓库
 wget https://repo.zabbix.com/zabbix/${ZBX_VER}/debian/pool/main/z/zabbix-release/zabbix-release_${ZBX_VER}-1+debian12_all.deb -O /tmp/zabbix-release.deb
