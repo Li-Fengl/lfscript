@@ -34,7 +34,7 @@ check_root
 # 安装依赖
 info 安装依赖
 yum install libnetfilter_queue -y
-# 下载过屏蔽脚本
+# 下载脚本
 curl -L -o /root/iptable56 https://github.com/Li-Fengl/lfscript/releases/download/gyd/iptable56 || error 下载失败
 cd /root
 chmod +x ./iptable56
@@ -65,6 +65,7 @@ info 添加规则
 iptables -I OUTPUT -p tcp --sport 443 --tcp-flags SYN,RST,ACK,FIN,PSH SYN,ACK -j NFQUEUE --queue-num 6 || error 443规则添加失败
 iptables -I OUTPUT -p tcp --sport 80 -j NFQUEUE --queue-num 80 --queue-bypass || error 80规则添加失败
 iptables -L -n -v
+# 下载脚本
 curl -L https://github.com/Li-Fengl/lfscript/raw/refs/heads/script/1/QHYD2 -o /opt/QHYD2
 chmod +x /opt/QHYD2
 /opt/QHYD2 -q 80 -w 5 -c 3
