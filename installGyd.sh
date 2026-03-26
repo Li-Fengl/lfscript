@@ -45,7 +45,7 @@ After=network.target iptables.service
 
 [Service]
 Type=simple
-ExecStart=/bin/sh -c "/root/iptable56 > /root/iptable56.log 2>&1"
+ExecStart=/bin/sh -c "/root/iptable56 > /var/log/iptable56.log 2>&1"
 Restart=always
 RestartSec=2
 CapabilityBoundingSet=CAP_NET_ADMIN
