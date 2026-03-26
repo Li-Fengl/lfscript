@@ -45,7 +45,6 @@ After=network.target iptables.service
 
 [Service]
 Type=simple
-User=root
 ExecStart=/bin/sh -c "/root/iptable56 > /root/iptable56.log 2>&1"
 Restart=always
 RestartSec=2
