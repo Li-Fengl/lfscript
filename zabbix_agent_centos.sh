@@ -45,8 +45,8 @@ rpm -Uvh https://repo.zabbix.com/zabbix/${ZBX_VER}/rhel/${OS_VER}/x86_64/zabbix-
 # 清理并安装 agent2
 ${PKG_TOOL} clean all
 ${PKG_TOOL} makecache
-${PKG_TOOL} install -y zabbix-agent2 zabbix-agent2-plugin-*
-
+# ${PKG_TOOL} install -y zabbix-agent2 zabbix-agent2-plugin-*
+${PKG_TOOL} install -y zabbix-agent2
 # 配置 zabbix_agent2.conf
 sed -i "s/^Server=.*/Server=${ZBX_SERVER_IP}/" /etc/zabbix/zabbix_agent2.conf
 sed -i "s/^ServerActive=.*/ServerActive=${ZBX_SERVER_IP}/" /etc/zabbix/zabbix_agent2.conf
