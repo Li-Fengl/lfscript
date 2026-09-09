@@ -60,7 +60,7 @@ wget https://repo.zabbix.com/zabbix/${ZBX_VER}/${OS_ID}/pool/main/z/zabbix-relea
 dpkg -i $DEB_URL
 
 apt update -y
-apt install -y zabbix-agent2 zabbix-agent2-plugin-*
+apt install -y zabbix-agent2
 
 CONF="/etc/zabbix/zabbix_agent2.conf"
 
