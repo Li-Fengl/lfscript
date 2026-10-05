@@ -27,11 +27,23 @@ fi
 # 检测 Debian / Ubuntu
 if grep -qi "debian" /etc/os-release; then
     OS_ID="debian"
-    OS_VER=$(grep -oP 'VERSION_ID="\K[0-9]+' /etc/os-release)
+    # OS_VER=$(grep -oP 'VERSION_ID="\K[0-9]+' /etc/os-release)
+    OS_VER=$(grep -oP 'VERSION_ID="\K[^"]+' /etc/os-release)
 elif grep -qi "ubuntu" /etc/os-release; then
     OS_ID="ubuntu"
-    OS_VER=$(grep -oP 'VERSION_ID="\K[0-9]+' /etc/os-release)
+    # OS_VER=$(grep -oP 'VERSION_ID="\K[0-9]+' /etc/os-release)
+    OS_VER=$(grep -oP 'VERSION_ID="\K[^"]+' /etc/os-release)
 else
+    echo "X 仅支持 Debian/Ubuntu"
+    exit 1
+fi
+
+. /etc/os-release
+
+OS_ID="$ID"
+OS_VER="$VERSION_ID"
+
+if [[ "$OS_ID" != "debian" && "$OS_ID" != "ubuntu" ]]; then
     echo "X 仅支持 Debian/Ubuntu"
     exit 1
 fi
@@ -44,8 +56,11 @@ apt install -y wget curl gnupg lsb-release
 # 自动找到最新的 zabbix-release_*.deb
 echo "获取最新 Zabbix 仓库包..."
 
+# DEB_URL=$(wget -qO- https://repo.zabbix.com/zabbix/${ZBX_VER}/${OS_ID}/pool/main/z/zabbix-release/ \
+#     | grep -oP "zabbix-release_${ZBX_VER}-[0-9]+\\+${OS_ID}${OS_VER}_all\\.deb" \
+#     | sort -V | tail -n 1)
 DEB_URL=$(wget -qO- https://repo.zabbix.com/zabbix/${ZBX_VER}/${OS_ID}/pool/main/z/zabbix-release/ \
-    | grep -oP "zabbix-release_${ZBX_VER}-[0-9]+\\+${OS_ID}${OS_VER}_all\\.deb" \
+    | grep -oP "zabbix-release_${ZBX_VER}-[0-9]+\+${OS_ID}[0-9]+\.[0-9]+_all\.deb" \
     | sort -V | tail -n 1)
 
 if [[ -z "$DEB_URL" ]]; then
@@ -59,14 +74,17 @@ echo "最新包名：$DEB_URL"
 wget https://repo.zabbix.com/zabbix/${ZBX_VER}/${OS_ID}/pool/main/z/zabbix-release/$DEB_URL
 dpkg -i $DEB_URL
 
-apt update -y
-apt install -y zabbix-agent2
+
+
+apt update
+apt install -y zabbix-agent2=1:6.0
+# apt install -y zabbix-agent2=1:6.0* zabbix-agent2-plugin-*
 
 CONF="/etc/zabbix/zabbix_agent2.conf"
 
 sed -i "s/^Server=.*/Server=${ZBX_SERVER_IP}/" $CONF
 sed -i "s/^ServerActive=.*/ServerActive=${ZBX_SERVER_IP}/" $CONF
-sed -i "s/^Hostname=.*/Hostname=$(hostname)/" $CONF
+sed -i "s/^Hostname=.*/Hostname=$(curl ip.sb)/" $CONF
 
 # HostMetadata 设置
 grep -q "^HostMetadata=" $CONF \
