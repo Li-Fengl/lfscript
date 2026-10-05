@@ -77,7 +77,8 @@ dpkg -i $DEB_URL
 
 
 apt update
-apt install -y zabbix-agent2=1:6.0
+# apt install -y zabbix-agent2=1:6.0
+apt install -y "zabbix-agent2=1:${ZBX_VER}.*"
 # apt install -y zabbix-agent2=1:6.0* zabbix-agent2-plugin-*
 
 CONF="/etc/zabbix/zabbix_agent2.conf"
